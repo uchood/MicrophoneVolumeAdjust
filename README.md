@@ -1,8 +1,9 @@
 MicrophoneVolumeAdjust
 ======================
 
-Adjust WaveIn volume in Windows
-need compilator with C++11
+Adjust WaveIn volume in Windows.
+
+Need compilator with C++11.
 
 example of use
 1. for Qt
