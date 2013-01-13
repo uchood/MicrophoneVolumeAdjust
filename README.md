@@ -2,15 +2,15 @@ MicrophoneVolumeAdjust
 ======================
 
 Adjust WaveIn volume in Windows
-Using C++11
+need compilator with C++11
 
-example use
-1 for Qt
+example of use
+1. for Qt
 add to .pro
 QMAKE_CXXFLAGS += -std=c++0x
 LIBS += -lwinmm
 
-2 for MSVS 2010-2012
+2. for MSVS 2010-2012
 add in project - >properties->linker->additional libs - Winmm.lib
 
 sample using code
