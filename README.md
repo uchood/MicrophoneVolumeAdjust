@@ -1,7 +1,7 @@
 MicrophoneVolumeAdjust
 ======================
 
-Adjust WaveIn volume in Windows.
+Adjust WaveIn volume in Windows: XP, Vista and 7.
 
 Need compilator with C++11.
 
