@@ -236,7 +236,101 @@ void MixerMicrophoneValue::SetVolume(double Volume01)//
 		}else{
             cerr<<"mixerOpen() failed"<<endl;
 		}
-	}
+    }
+}
+
+int MixerMicrophoneValue::MuteOff(bool state)
+{
+    int res=0;
+    if(flagLinkedToDeviceControl){
+        MMRESULT                        result;
+        HMIXER                          hMixer;
+        // get a handle to the mixer device
+        result = mixerOpen(&hMixer, ID_OfTargetWaveIn , 0, 0, MIXER_OBJECTF_MIXER);
+        if (MMSYSERR_NOERROR == result) {
+            if(	LastMicroMixerControl_Mute.dwControlType==MIXERCONTROL_CONTROLTYPE_MUTE
+                /*||mcarr[k].dwControlType==MIXERCONTROL_CONTROLTYPE_ONOFF*/ //onoff for usb it is usually automatic recording level control - DONT TOUCH
+                ){
+                MIXERCONTROLDETAILS mixDetails;
+                MIXERCONTROLDETAILS_BOOLEAN mixMute;
+                mixDetails.cbStruct = sizeof(MIXERCONTROLDETAILS);
+                mixDetails.dwControlID = LastMicroMixerControl_Mute.dwControlID;
+                mixDetails.cChannels = (DWORD) 1;
+                mixDetails.hwndOwner = NULL;
+                mixDetails.cbDetails =sizeof(MIXERCONTROLDETAILS_BOOLEAN);
+                mixDetails.paDetails = (LPMIXERCONTROLDETAILS_BOOLEAN)&mixMute;
+                result = mixerGetControlDetails((HMIXEROBJ)hMixer,(LPMIXERCONTROLDETAILS) &mixDetails, MIXER_GETCONTROLDETAILSF_VALUE);
+                if(MMSYSERR_NOERROR == result){
+                    //Mute off/on
+                    if(state){
+                        mixMute.fValue = LastMicroMixerControl_Mute.Bounds.lMinimum; // Mute off
+                    }else{
+                        mixMute.fValue = LastMicroMixerControl_Mute.Bounds.lMaximum; //Mute on
+                    }
+                    result=mixerSetControlDetails((HMIXEROBJ)hMixer, (LPMIXERCONTROLDETAILS) &mixDetails,MIXER_SETCONTROLDETAILSF_VALUE);
+                    if(MMSYSERR_NOERROR == result){
+                    //	cout<<" Mute(OnOf) changed to "<<mixMute.fValue<<endl;
+                    }else{
+                        res=-1;
+                    //	cerr<<" mixerSetControlDetails for source failed\n";
+                        cerr<<GetTextErrorMMSystem(result)<<endl;
+                    }
+                }else{
+                    res=-1;
+                    cerr<<"mixerGetControlDetails for source failed\n";
+                    cerr<<GetTextErrorMMSystem(result)<<endl;
+                }
+            }
+            mixerClose(hMixer);
+        }else{
+            res=-1;
+            cerr<<"mixerOpen() failed"<<endl;
+        }
+    }
+    return res;
+}
+
+bool MixerMicrophoneValue::IsMuteOff()
+{
+    bool flagMuteOff=true;
+    if(flagLinkedToDeviceControl){
+        MMRESULT                        result;
+        HMIXER                          hMixer;
+        // get a handle to the mixer device
+        result = mixerOpen(&hMixer, ID_OfTargetWaveIn , 0, 0, MIXER_OBJECTF_MIXER);
+        if (MMSYSERR_NOERROR == result) {
+            if(	LastMicroMixerControl_Mute.dwControlType==MIXERCONTROL_CONTROLTYPE_MUTE
+                /*||mcarr[k].dwControlType==MIXERCONTROL_CONTROLTYPE_ONOFF*/ //onoff for usb it is usually automatic recording level control - DONT TOUCH
+                ){
+                MIXERCONTROLDETAILS mixDetails;
+                MIXERCONTROLDETAILS_BOOLEAN mixMute;
+                mixDetails.cbStruct = sizeof(MIXERCONTROLDETAILS);
+                mixDetails.dwControlID = LastMicroMixerControl_Mute.dwControlID;
+                mixDetails.cChannels = (DWORD) 1;
+                mixDetails.hwndOwner = NULL;
+                mixDetails.cbDetails =sizeof(MIXERCONTROLDETAILS_BOOLEAN);
+                mixDetails.paDetails = (LPMIXERCONTROLDETAILS_BOOLEAN)&mixMute;
+                result = mixerGetControlDetails((HMIXEROBJ)hMixer,(LPMIXERCONTROLDETAILS) &mixDetails, MIXER_GETCONTROLDETAILSF_VALUE);
+                if(MMSYSERR_NOERROR == result){
+                    //Checjk state Mute off/on
+                    result=mixerGetControlDetails((HMIXEROBJ)hMixer, (LPMIXERCONTROLDETAILS) &mixDetails,MIXER_SETCONTROLDETAILSF_VALUE);
+                    if(MMSYSERR_NOERROR == result){
+                        flagMuteOff= mixMute.fValue == LastMicroMixerControl_Mute.Bounds.lMinimum?true:false;
+                    }else{
+                    //	cerr<<" mixerSetControlDetails for source failed\n";
+                        cerr<<GetTextErrorMMSystem(result)<<endl;
+                    }
+                }else{
+                    cerr<<"mixerGetControlDetails for source failed\n";
+                    cerr<<GetTextErrorMMSystem(result)<<endl;
+                }
+            }
+            mixerClose(hMixer);
+        }else{
+            cerr<<"mixerOpen() failed"<<endl;
+        }
+    }
+    return flagMuteOff;
 }
 
 

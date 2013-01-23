@@ -32,8 +32,11 @@ public:
     const std::string &GetNameOfLinkedDevice();
 	void Release(void);
 	double GetVolume(void);
-	void SetVolume(double volume);
+    void SetVolume(double volume);
+    int MuteOff(bool state);
+    bool IsMuteOff();
     int LinkToDevice(const std::string &namedevice);
+
 
 };
 
