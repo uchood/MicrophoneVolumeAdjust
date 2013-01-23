@@ -14,7 +14,7 @@ LIBS += -lwinmm
 2. for MSVS 2010-2012
 add in project - >properties->linker->additional libs - Winmm.lib
 
-sample using code
+sample using code or see  \Example\Qt\mainwindow.cpp 
 
 #include "MixerMicrophoneValue.h"
 main()
