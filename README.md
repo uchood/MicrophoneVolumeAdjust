@@ -26,4 +26,11 @@ main()
 	Adjuster.LinkToDevice(std::string("SBLive"));//link to default WaveIn device that name begin with "SBLive"
 	std::cout<<Adjuster.GetVolume()<<std::endl;
 	Adjuster.SetVolume(0.1);
+        //Sample Mute
+        //1 check mute state
+	bool muteoff=MixerInVolume.IsMuteOff();
+	//set mute on
+	 MixerInVolume.MuteOff(false);	
+        //set mute off
+	MixerInVolume.MuteOff(true);	
 }
