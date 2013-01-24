@@ -16,21 +16,20 @@ add in project - >properties->linker->additional libs - Winmm.lib
 
 sample using code or see  \Example\Qt\mainwindow.cpp 
 
-#include "MixerMicrophoneValue.h"
-main()
-{
-	MixerMicrophoneValue Adjuster;
-	Adjuster.LinkToDevice(std::string("default"));//link to default WaveIn device
-	std::cout<<Adjuster.GetVolume()<<std::endl;
-	Adjuster.SetVolume(0.9);
-	Adjuster.LinkToDevice(std::string("SBLive"));//link to default WaveIn device that name begin with "SBLive"
-	std::cout<<Adjuster.GetVolume()<<std::endl;
-	Adjuster.SetVolume(0.1);
-        //Sample Mute
-        //1 check mute state
-	bool muteoff=MixerInVolume.IsMuteOff();
-	//set mute on
-	 MixerInVolume.MuteOff(false);	
-        //set mute off
-	MixerInVolume.MuteOff(true);	
-}
+	include "MixerMicrophoneValue.h"
+	main()
+	{
+		MixerMicrophoneValue Adjuster;
+		Adjuster.LinkToDevice(std::string("default"));//link to default WaveIn device
+		std::cout<<Adjuster.GetVolume()<<std::endl;
+		Adjuster.SetVolume(0.9);
+		Adjuster.LinkToDevice(std::string("SBLive"));//link to default WaveIn device that name begin with "SBLive"
+		std::cout<<Adjuster.GetVolume()<<std::endl;
+		Adjuster.SetVolume(0.1);
+	        
+	        //Example of Mute
+	        bool muteoff=MixerInVolume.IsMuteOff();//check mute state
+	        std::cout<<"Microphone is mute "<<(muteoff?"Off":"On")<<std::endl;
+	        MixerInVolume.MuteOff(false);	//set mute on
+	        MixerInVolume.MuteOff(true);	//set mute off
+	}
